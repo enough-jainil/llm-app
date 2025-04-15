@@ -112,7 +112,7 @@ body {
 
 .search-input-container {
   position: relative;
-  width: 300px;
+  width: 100%;
 }
 
 .search-input {
@@ -303,7 +303,6 @@ body {
 }
 
 .pricing-calculator {
-  max-width: 600px;
   margin: 0 auto 2rem;
   background-color: #f9f9fb;
   border-radius: 8px;
