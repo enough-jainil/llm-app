@@ -403,16 +403,25 @@ body {
 .token-input {
   width: 100%;
   padding: 0.7rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--glass-border);
   border-radius: 4px;
   font-size: 0.9rem;
   outline: none;
   transition: border 0.2s;
+  background-color: rgba(30, 30, 30, 0.5);
+  color: var(--text-primary);
 }
 
 .model-select:focus,
 .token-input:focus {
-  border-color: var(--primary-color);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(140, 97, 255, 0.2);
+}
+
+/* Fix dropdown options in dark mode */
+select option {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
 }
 
 .price-result {
