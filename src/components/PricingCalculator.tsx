@@ -290,7 +290,7 @@ function PricingCalculator() {
                 <th>Input $/1M</th>
                 <th>Output $/1M</th>
                 <th>Estimated Cost</th>
-                <th>Action</th>
+                {/* <th>Action</th> */}
               </tr>
             </thead>
             <tbody>
@@ -301,7 +301,7 @@ function PricingCalculator() {
                     selectedModelId === model.id ? "selected-model-row" : ""
                   }
                 >
-                  <td>{model.name}</td>
+                  <td className="model-name">{model.name}</td>
                   <td>
                     <div className="provider-cell">
                       <img
@@ -311,16 +311,16 @@ function PricingCalculator() {
                       {model.provider.name}
                     </div>
                   </td>
-                  <td>{model.quality}</td>
+                  <td className="quality-cell">{model.quality}</td>
                   <td>{model.context}</td>
                   <td>${model.inputPrice}</td>
                   <td>${model.outputPrice}</td>
                   <td className="estimated-cost">
                     ${calculateModelPrice(model).toFixed(6)}
                   </td>
-                  <td className="action-cell">
+                  {/* <td className="action-cell">
                     <button className="action-button">Buy</button>
-                  </td>
+                  </td> */}
                 </tr>
               ))}
             </tbody>

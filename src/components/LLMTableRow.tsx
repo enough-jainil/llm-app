@@ -7,21 +7,21 @@ interface LLMTableRowProps {
 function LLMTableRow({ model }: LLMTableRowProps) {
   return (
     <tr key={model.id}>
-      <td>{model.name}</td>
+      <td className="model-name">{model.name}</td>
       <td>
         <div className="provider-cell">
           <img src={model.provider.logo} alt={model.provider.name} />
           {model.provider.name}
         </div>
       </td>
-      <td>{model.quality}</td>
+      <td className="quality-cell">{model.quality}</td>
       <td>{model.context}</td>
       <td>${model.inputPrice}</td>
       <td>${model.outputPrice}</td>
       <td>{model.knowledge}</td>
-      <td className="action-cell">
+      {/* <td className="action-cell">
         <button className="action-button">Buy</button>
-      </td>
+      </td> */}
     </tr>
   );
 }
