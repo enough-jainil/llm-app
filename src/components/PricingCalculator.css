@@ -1,17 +1,14 @@
-.main-content-row {
-  display: flex;
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
+/* Removed flex styles for .main-content-row */
 
 .calculator-section {
-  flex: 1;
-  min-width: 500px;
+  /* flex: 1; Removed */
+  /* min-width: 500px; Removed */
+  margin-bottom: 2rem; /* Add margin below calculator */
 }
 
 .chart-section {
-  flex: 1;
-  min-width: 500px;
+  /* flex: 1; Removed */
+  /* min-width: 500px; Removed */
   padding: 1rem;
   background: white;
   border-radius: 8px;
@@ -36,22 +33,14 @@
   padding-bottom: 1rem;
   font-size: 1.5rem;
   color: #333;
+  text-align: center; /* Center title */
 }
 
 .comparison-subtitle {
   font-size: 0.9rem;
   color: #666;
   margin-top: 0.5rem;
+  text-align: center; /* Center subtitle */
 }
 
-@media (max-width: 1200px) {
-  .main-content-row {
-    flex-direction: column;
-  }
-
-  .calculator-section,
-  .chart-section {
-    width: 100%;
-    min-width: auto;
-  }
-}
+/* Removed @media query for stacking */

@@ -1,13 +1,15 @@
-import { useState, ChangeEvent, useMemo } from "react";
+import { useState, ChangeEvent } from "react";
 import { llmModels, LLMModel } from "../data/llmModels";
 import {
   BarChart,
   Bar,
   XAxis,
   YAxis,
+  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
   Cell,
+  Legend,
 } from "recharts";
 import "./PricingCalculator.css";
 
@@ -124,23 +126,14 @@ function PricingCalculator() {
 
   // Function to prepare data for the cost comparison chart - now includes all models
   const getCostComparisonData = () => {
-    return llmModels.map((model) => ({
+    const data = llmModels.map((model) => ({
       name: model.name,
       provider: model.provider.name,
       cost: calculateModelPrice(model, selectedUnit),
       isSelected: model.id === selectedModelId,
     }));
+    return data;
   };
-
-  // Calculate dynamic chart height
-  const chartHeight = useMemo(() => {
-    const barHeight = 30; // Height per bar
-    const topMargin = 20;
-    const bottomMargin = 20;
-    const calculatedHeight =
-      llmModels.length * barHeight + topMargin + bottomMargin;
-    return Math.max(calculatedHeight, 400); // Ensure a minimum height
-  }, [llmModels.length]);
 
   return (
     <div className="pricing-calculator-container">
@@ -314,23 +307,26 @@ function PricingCalculator() {
         <div className="chart-section">
           <h3 className="comparison-title">Cost Comparison</h3>
           <div className="chart-container">
-            <ResponsiveContainer width="100%" height={chartHeight}>
+            <ResponsiveContainer width="100%" height={600}>
               <BarChart
                 data={getCostComparisonData()}
-                margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-                layout="vertical"
-                barCategoryGap="20%"
+                margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
+                layout="horizontal"
               >
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis
-                  type="number"
-                  tickFormatter={(value) => `$${value.toFixed(6)}`}
+                  dataKey="name"
+                  type="category"
+                  interval={0}
+                  angle={-45}
+                  textAnchor="end"
+                  height={100}
+                  tick={{ fontSize: 10 }}
                 />
                 <YAxis
-                  type="category"
-                  dataKey="name"
-                  width={180}
-                  tick={{ fontSize: 12 }}
-                  interval={0}
+                  type="number"
+                  tickFormatter={(value) => `$${value.toFixed(6)}`}
+                  width={80}
                 />
                 <Tooltip
                   formatter={(value, name, props) => [
@@ -338,12 +334,8 @@ function PricingCalculator() {
                     `${props.payload.name} (${props.payload.provider})`,
                   ]}
                 />
-                <Bar
-                  dataKey="cost"
-                  fillOpacity={0.8}
-                  strokeWidth={1}
-                  barSize={20}
-                >
+                <Legend verticalAlign="top" height={36} />
+                <Bar dataKey="cost" name="Estimated Cost" barSize={30}>
                   {getCostComparisonData().map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
