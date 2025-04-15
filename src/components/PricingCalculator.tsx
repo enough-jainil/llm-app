@@ -121,7 +121,9 @@ function PricingCalculator() {
     const inputCost = (inputTokens / 1000000) * model.inputPrice;
     const outputCost = (outputTokens / 1000000) * model.outputPrice;
 
-    return (inputCost + outputCost) * apiCalls;
+    const cost = (inputCost + outputCost) * apiCalls;
+    // Ensure cost is slightly above zero for log scale
+    return Math.max(cost, 0.00000001);
   };
 
   // Function to prepare data for the cost comparison chart - now includes all models
@@ -132,6 +134,8 @@ function PricingCalculator() {
       cost: calculateModelPrice(model, selectedUnit),
       isSelected: model.id === selectedModelId,
     }));
+    // Sort by cost (ascending)
+    data.sort((a, b) => a.cost - b.cost);
     return data;
   };
 
@@ -305,12 +309,12 @@ function PricingCalculator() {
         </div>
 
         <div className="chart-section">
-          <h3 className="comparison-title">Cost Comparison</h3>
+          <h3 className="comparison-title">Cost Comparison (Log Scale)</h3>
           <div className="chart-container">
-            <ResponsiveContainer width="100%" height={600}>
+            <ResponsiveContainer width="100%" height={700}>
               <BarChart
                 data={getCostComparisonData()}
-                margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
+                margin={{ top: 20, right: 30, left: 20, bottom: 150 }}
                 layout="horizontal"
               >
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -318,15 +322,18 @@ function PricingCalculator() {
                   dataKey="name"
                   type="category"
                   interval={0}
-                  angle={-45}
+                  angle={-90}
                   textAnchor="end"
-                  height={100}
+                  height={160}
                   tick={{ fontSize: 10 }}
                 />
                 <YAxis
                   type="number"
+                  scale="log"
+                  domain={["auto", "auto"]}
+                  allowDataOverflow={true}
                   tickFormatter={(value) => `$${value.toFixed(6)}`}
-                  width={80}
+                  width={90}
                 />
                 <Tooltip
                   formatter={(value, name, props) => [
@@ -335,7 +342,7 @@ function PricingCalculator() {
                   ]}
                 />
                 <Legend verticalAlign="top" height={36} />
-                <Bar dataKey="cost" name="Estimated Cost" barSize={30}>
+                <Bar dataKey="cost" name="Estimated Cost" barSize={40}>
                   {getCostComparisonData().map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
