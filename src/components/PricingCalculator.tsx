@@ -1,5 +1,15 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useMemo } from "react";
 import { llmModels, LLMModel } from "../data/llmModels";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+} from "recharts";
+import "./PricingCalculator.css";
 
 type UnitType = "tokens" | "words" | "characters";
 
@@ -112,188 +122,248 @@ function PricingCalculator() {
     return (inputCost + outputCost) * apiCalls;
   };
 
-  // Sort models by calculated price
-  const getSortedModels = () => {
-    return [...llmModels].sort((a, b) => {
-      // Pass selectedUnit to calculateModelPrice
-      const priceA = calculateModelPrice(a, selectedUnit);
-      const priceB = calculateModelPrice(b, selectedUnit);
-      return priceA - priceB;
-    });
+  // Function to prepare data for the cost comparison chart - now includes all models
+  const getCostComparisonData = () => {
+    return llmModels.map((model) => ({
+      name: model.name,
+      provider: model.provider.name,
+      cost: calculateModelPrice(model, selectedUnit),
+      isSelected: model.id === selectedModelId,
+    }));
   };
+
+  // Calculate dynamic chart height
+  const chartHeight = useMemo(() => {
+    const barHeight = 30; // Height per bar
+    const topMargin = 20;
+    const bottomMargin = 20;
+    const calculatedHeight =
+      llmModels.length * barHeight + topMargin + bottomMargin;
+    return Math.max(calculatedHeight, 400); // Ensure a minimum height
+  }, [llmModels.length]);
 
   return (
     <div className="pricing-calculator-container">
-      <div className="pricing-calculator">
-        <h2 className="calculator-title">LLM Price Calculator</h2>
+      <div className="main-content-row">
+        <div className="calculator-section">
+          <div className="pricing-calculator">
+            <h2 className="calculator-title">LLM Price Calculator</h2>
 
-        <div className="unit-selector">
-          <div className="unit-tabs">
-            <div
-              className={`unit-tab ${
-                selectedUnit === "tokens" ? "active" : ""
-              }`}
-              onClick={() => handleUnitChange("tokens")}
-            >
-              Tokens
+            <div className="unit-selector">
+              <div className="unit-tabs">
+                <div
+                  className={`unit-tab ${
+                    selectedUnit === "tokens" ? "active" : ""
+                  }`}
+                  onClick={() => handleUnitChange("tokens")}
+                >
+                  Tokens
+                </div>
+                <div
+                  className={`unit-tab ${
+                    selectedUnit === "words" ? "active" : ""
+                  }`}
+                  onClick={() => handleUnitChange("words")}
+                >
+                  Words
+                </div>
+                <div
+                  className={`unit-tab ${
+                    selectedUnit === "characters" ? "active" : ""
+                  }`}
+                  onClick={() => handleUnitChange("characters")}
+                >
+                  Characters
+                </div>
+              </div>
             </div>
-            <div
-              className={`unit-tab ${selectedUnit === "words" ? "active" : ""}`}
-              onClick={() => handleUnitChange("words")}
-            >
-              Words
+
+            <div className="calculator-form">
+              <div className="form-group">
+                <label htmlFor="model-select">Select Model:</label>
+                <select
+                  id="model-select"
+                  value={selectedModelId}
+                  onChange={handleModelChange}
+                  className="model-select"
+                >
+                  <option value="">-- Select a model --</option>
+                  {llmModels.map((model) => (
+                    <option key={model.id} value={model.id}>
+                      {model.name} ({model.provider.name})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="input-value">Input {selectedUnit}:</label>
+                  <input
+                    id="input-value"
+                    type="number"
+                    min="0"
+                    value={inputValue}
+                    onChange={handleInputValueChange}
+                    className="token-input"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="output-value">Output {selectedUnit}:</label>
+                  <input
+                    id="output-value"
+                    type="number"
+                    min="0"
+                    value={outputValue}
+                    onChange={handleOutputValueChange}
+                    className="token-input"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="api-calls">API Calls:</label>
+                  <input
+                    id="api-calls"
+                    type="number"
+                    min="1"
+                    value={apiCalls}
+                    onChange={handleApiCallsChange}
+                    className="token-input"
+                  />
+                </div>
+              </div>
             </div>
-            <div
-              className={`unit-tab ${
-                selectedUnit === "characters" ? "active" : ""
-              }`}
-              onClick={() => handleUnitChange("characters")}
-            >
-              Characters
+
+            {selectedModelId && (
+              <div className="price-details">
+                <table className="price-table">
+                  <thead>
+                    <tr>
+                      <th>API Calls</th>
+                      <th>Input {selectedUnit}</th>
+                      <th>Output {selectedUnit}</th>
+                      <th>Total Cost</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{apiCalls}</td>
+                      <td>
+                        {inputValue} {selectedUnit} × $
+                        {(getSelectedModel()?.inputPrice || 0) / 1000000} per{" "}
+                        {selectedUnit} = $
+                        {(
+                          (convertToTokens(inputValue, selectedUnit) /
+                            1000000) *
+                          (getSelectedModel()?.inputPrice || 0)
+                        ).toFixed(6)}
+                      </td>
+                      <td>
+                        {outputValue} {selectedUnit} × $
+                        {(getSelectedModel()?.outputPrice || 0) / 1000000} per{" "}
+                        {selectedUnit} = $
+                        {(
+                          (convertToTokens(outputValue, selectedUnit) /
+                            1000000) *
+                          (getSelectedModel()?.outputPrice || 0)
+                        ).toFixed(6)}
+                      </td>
+                      <td>${totalPrice?.toFixed(6) || "0.000000"}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            <div className="price-result">
+              <h3>Estimated Total Price:</h3>
+              {totalPrice !== null ? (
+                <p className="price-value">${totalPrice.toFixed(6)}</p>
+              ) : (
+                <p className="price-placeholder">
+                  Select a model to calculate price
+                </p>
+              )}
+            </div>
+
+            <div className="unit-info">
+              <h4>About Units</h4>
+              <ul>
+                <li>
+                  <strong>Tokens:</strong> The standard billing unit for LLMs.
+                  Most providers count both input and output tokens.
+                </li>
+                <li>
+                  <strong>Words:</strong> Approximately 1 word ≈ 1.3 tokens
+                  (varies by language and model).
+                </li>
+                <li>
+                  <strong>Characters:</strong> Approximately 4 characters ≈ 1
+                  token (varies by language and model).
+                </li>
+              </ul>
+              <p className="info-note">
+                Note: Conversions are approximate and may vary by language,
+                model, and content type.
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="calculator-form">
-          <div className="form-group">
-            <label htmlFor="model-select">Select Model:</label>
-            <select
-              id="model-select"
-              value={selectedModelId}
-              onChange={handleModelChange}
-              className="model-select"
-            >
-              <option value="">-- Select a model --</option>
-              {llmModels.map((model) => (
-                <option key={model.id} value={model.id}>
-                  {model.name} ({model.provider.name})
-                </option>
-              ))}
-            </select>
+        <div className="chart-section">
+          <h3 className="comparison-title">Cost Comparison</h3>
+          <div className="chart-container">
+            <ResponsiveContainer width="100%" height={chartHeight}>
+              <BarChart
+                data={getCostComparisonData()}
+                margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                layout="vertical"
+                barCategoryGap="20%"
+              >
+                <XAxis
+                  type="number"
+                  tickFormatter={(value) => `$${value.toFixed(6)}`}
+                />
+                <YAxis
+                  type="category"
+                  dataKey="name"
+                  width={180}
+                  tick={{ fontSize: 12 }}
+                  interval={0}
+                />
+                <Tooltip
+                  formatter={(value, name, props) => [
+                    `$${Number(value).toFixed(6)}`,
+                    `${props.payload.name} (${props.payload.provider})`,
+                  ]}
+                />
+                <Bar
+                  dataKey="cost"
+                  fillOpacity={0.8}
+                  strokeWidth={1}
+                  barSize={20}
+                >
+                  {getCostComparisonData().map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={entry.isSelected ? "#4CAF50" : "#8884d8"}
+                      stroke={entry.isSelected ? "#4CAF50" : "#8884d8"}
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
           </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="input-value">Input {selectedUnit}:</label>
-              <input
-                id="input-value"
-                type="number"
-                min="0"
-                value={inputValue}
-                onChange={handleInputValueChange}
-                className="token-input"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="output-value">Output {selectedUnit}:</label>
-              <input
-                id="output-value"
-                type="number"
-                min="0"
-                value={outputValue}
-                onChange={handleOutputValueChange}
-                className="token-input"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="api-calls">API Calls:</label>
-              <input
-                id="api-calls"
-                type="number"
-                min="1"
-                value={apiCalls}
-                onChange={handleApiCallsChange}
-                className="token-input"
-              />
-            </div>
-          </div>
-        </div>
-
-        {selectedModelId && (
-          <div className="price-details">
-            <table className="price-table">
-              <thead>
-                <tr>
-                  <th>API Calls</th>
-                  <th>Input {selectedUnit}</th>
-                  <th>Output {selectedUnit}</th>
-                  <th>Total Cost</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{apiCalls}</td>
-                  <td>
-                    {inputValue} {selectedUnit} × $
-                    {(getSelectedModel()?.inputPrice || 0) / 1000000} per{" "}
-                    {selectedUnit} = $
-                    {(
-                      (convertToTokens(inputValue, selectedUnit) / 1000000) *
-                      (getSelectedModel()?.inputPrice || 0)
-                    ).toFixed(6)}
-                  </td>
-                  <td>
-                    {outputValue} {selectedUnit} × $
-                    {(getSelectedModel()?.outputPrice || 0) / 1000000} per{" "}
-                    {selectedUnit} = $
-                    {(
-                      (convertToTokens(outputValue, selectedUnit) / 1000000) *
-                      (getSelectedModel()?.outputPrice || 0)
-                    ).toFixed(6)}
-                  </td>
-                  <td>${totalPrice?.toFixed(6) || "0.000000"}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        <div className="price-result">
-          <h3>Estimated Total Price:</h3>
-          {totalPrice !== null ? (
-            <p className="price-value">${totalPrice.toFixed(6)}</p>
-          ) : (
-            <p className="price-placeholder">
-              Select a model to calculate price
-            </p>
-          )}
-        </div>
-
-        <div className="unit-info">
-          <h4>About Units</h4>
-          <ul>
-            <li>
-              <strong>Tokens:</strong> The standard billing unit for LLMs. Most
-              providers count both input and output tokens.
-            </li>
-            <li>
-              <strong>Words:</strong> Approximately 1 word ≈ 1.3 tokens (varies
-              by language and model).
-            </li>
-            <li>
-              <strong>Characters:</strong> Approximately 4 characters ≈ 1 token
-              (varies by language and model).
-            </li>
-          </ul>
-          <p className="info-note">
-            Note: Conversions are approximate and may vary by language, model,
-            and content type.
+          <p className="comparison-subtitle">
+            Prices calculated for {inputValue} {selectedUnit} input,{" "}
+            {outputValue} {selectedUnit} output, and {apiCalls} API call
+            {apiCalls !== 1 ? "s" : ""}
           </p>
         </div>
       </div>
 
       <div className="model-comparison-section">
-        <h3 className="comparison-title">
-          Price Comparison for Current Settings
-        </h3>
-        <p className="comparison-subtitle">
-          Prices calculated for {inputValue} {selectedUnit} input, {outputValue}{" "}
-          {selectedUnit} output, and {apiCalls} API call
-          {apiCalls !== 1 ? "s" : ""}
-        </p>
-
         <div className="pricing-table-container">
           <table className="pricing-table">
             <thead>
@@ -309,7 +379,7 @@ function PricingCalculator() {
               </tr>
             </thead>
             <tbody>
-              {getSortedModels().map((model) => (
+              {llmModels.map((model) => (
                 <tr
                   key={model.id}
                   className={
