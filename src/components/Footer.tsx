@@ -6,7 +6,7 @@ const Footer: React.FC = () => {
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-section">
-          <h3>Source</h3>
+          {/* <h3>Source</h3>
           <div className="footer-links">
             <h4>Pricing</h4>
             <ul>
@@ -26,15 +26,19 @@ const Footer: React.FC = () => {
                 <a href="#">Cohere Pricing</a>
               </li>
             </ul>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="footer-bottom">
-        <span>LLM Price Check</span>
+        <span>LLM Price Checker</span>
         <div className="footer-bottom-right">
-          <span>Contact us</span>
+          <a href="/contact" title="Contact LLM Price Checker">
+            Contact us
+          </a>
           <span>•</span>
-          <span>Credits</span>
+          <a href="/credits" title="Credits and Attributions">
+            Credits
+          </a>
         </div>
       </div>
     </footer>

@@ -7,8 +7,13 @@ import Footer from "./components/Footer";
 function App() {
   return (
     <div className="app-container">
+      <a href="#main-content" className="skip-to-content">
+        Skip to content
+      </a>
       <Navbar />
-      <Main />
+      <div id="main-content">
+        <Main />
+      </div>
       <Footer />
     </div>
   );
