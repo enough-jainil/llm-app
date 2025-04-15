@@ -396,7 +396,7 @@ body {
   margin-bottom: 0.5rem;
   font-weight: 500;
   font-size: 0.9rem;
-  color: #555;
+  color: var(--text-primary);
 }
 
 .model-select,
@@ -416,28 +416,28 @@ body {
 }
 
 .price-result {
-  background-color: #f0f5ff;
+  background-color: rgba(30, 30, 30, 0.5);
   padding: 1.5rem;
   border-radius: 8px;
   text-align: center;
-  border: 1px solid #e0e8ff;
+  border: 1px solid var(--glass-border);
 }
 
 .price-result h3 {
   font-size: 1.1rem;
   font-weight: 500;
   margin-bottom: 0.5rem;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .price-value {
   font-size: 2rem;
   font-weight: 600;
-  color: var(--primary-color);
+  color: var(--accent-color);
 }
 
 .price-placeholder {
-  color: #888;
+  color: var(--text-secondary);
   font-style: italic;
 }
 
@@ -448,7 +448,7 @@ body {
 .unit-tabs {
   display: flex;
   justify-content: center;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--glass-border);
   border-radius: 4px;
   overflow: hidden;
   width: fit-content;
@@ -458,8 +458,9 @@ body {
 .unit-tab {
   padding: 0.5rem 1.5rem;
   cursor: pointer;
-  background-color: #f5f5f5;
-  border-right: 1px solid var(--border-color);
+  background-color: rgba(30, 30, 30, 0.5);
+  color: var(--text-secondary);
+  border-right: 1px solid var(--glass-border);
   transition: all 0.2s ease;
 }
 
@@ -468,7 +469,7 @@ body {
 }
 
 .unit-tab.active {
-  background-color: var(--primary-color);
+  background-color: var(--accent-color);
   color: white;
 }
 
@@ -485,10 +486,10 @@ body {
 
 .price-details {
   margin: 1.5rem 0;
-  background-color: #f8faff;
+  background-color: rgba(30, 30, 30, 0.3);
   border-radius: 8px;
   padding: 1rem;
-  border: 1px solid #e0e8ff;
+  border: 1px solid var(--glass-border);
 }
 
 .price-table {
@@ -501,13 +502,13 @@ body {
 .price-table td {
   padding: 0.7rem;
   text-align: left;
-  border-bottom: 1px solid #e0e8ff;
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .price-table th {
   font-weight: 500;
-  color: #555;
-  background-color: #f0f5ff;
+  color: var(--text-primary);
+  background-color: rgba(40, 40, 40, 0.7);
 }
 
 .price-table tr:last-child td {
@@ -517,15 +518,15 @@ body {
 .unit-info {
   margin-top: 2rem;
   padding: 1rem;
-  background-color: #f5f7fa;
+  background-color: rgba(30, 30, 30, 0.3);
   border-radius: 8px;
-  border: 1px dashed #ccd6e0;
+  border: 1px dashed var(--glass-border);
 }
 
 .unit-info h4 {
   font-size: 1rem;
   margin-bottom: 0.75rem;
-  color: #444;
+  color: var(--text-primary);
 }
 
 .unit-info ul {
@@ -540,7 +541,7 @@ body {
 
 .info-note {
   font-size: 0.85rem;
-  color: #666;
+  color: var(--text-secondary);
   font-style: italic;
 }
 
@@ -548,7 +549,7 @@ body {
 .model-comparison-section {
   margin-top: 3rem;
   padding-top: 2rem;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--glass-border);
 }
 
 .comparison-title {
@@ -556,21 +557,22 @@ body {
   font-weight: 500;
   text-align: center;
   margin-bottom: 0.5rem;
+  color: var(--text-primary);
 }
 
 .comparison-subtitle {
   text-align: center;
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 1.5rem;
   font-size: 0.95rem;
 }
 
 .selected-model-row {
-  background-color: #f0f5ff !important;
-  border-left: 3px solid var(--primary-color);
+  background-color: rgba(140, 97, 255, 0.1) !important;
+  border-left: 3px solid var(--accent-color);
 }
 
 .estimated-cost {
   font-weight: 600;
-  color: var(--primary-color);
+  color: var(--accent-color);
 }
