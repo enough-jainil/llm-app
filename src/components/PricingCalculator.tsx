@@ -17,30 +17,42 @@ function PricingCalculator() {
 
   const handleModelChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setSelectedModelId(e.target.value);
-    calculatePrice(e.target.value, inputValue, outputValue, apiCalls);
+    calculatePrice(
+      e.target.value,
+      inputValue,
+      outputValue,
+      apiCalls,
+      selectedUnit
+    );
   };
 
   const handleInputValueChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value) || 0;
     setInputValue(value);
-    calculatePrice(selectedModelId, value, outputValue, apiCalls);
+    calculatePrice(selectedModelId, value, outputValue, apiCalls, selectedUnit);
   };
 
   const handleOutputValueChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value) || 0;
     setOutputValue(value);
-    calculatePrice(selectedModelId, inputValue, value, apiCalls);
+    calculatePrice(selectedModelId, inputValue, value, apiCalls, selectedUnit);
   };
 
   const handleApiCallsChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value) || 1;
     setApiCalls(value);
-    calculatePrice(selectedModelId, inputValue, outputValue, value);
+    calculatePrice(
+      selectedModelId,
+      inputValue,
+      outputValue,
+      value,
+      selectedUnit
+    );
   };
 
   const handleUnitChange = (unit: UnitType) => {
     setSelectedUnit(unit);
-    calculatePrice(selectedModelId, inputValue, outputValue, apiCalls);
+    calculatePrice(selectedModelId, inputValue, outputValue, apiCalls, unit);
   };
 
   const convertToTokens = (value: number, unit: UnitType): number => {
@@ -58,7 +70,8 @@ function PricingCalculator() {
     modelId: string,
     inputs: number,
     outputs: number,
-    calls: number
+    calls: number,
+    unit: UnitType
   ) => {
     if (!modelId) {
       setTotalPrice(null);
@@ -71,9 +84,9 @@ function PricingCalculator() {
       return;
     }
 
-    // Convert to tokens if using a different unit
-    const inputTokens = convertToTokens(inputs, selectedUnit);
-    const outputTokens = convertToTokens(outputs, selectedUnit);
+    // Convert to tokens using the passed unit
+    const inputTokens = convertToTokens(inputs, unit);
+    const outputTokens = convertToTokens(outputs, unit);
 
     const inputCost = (inputTokens / 1000000) * model.inputPrice;
     const outputCost = (outputTokens / 1000000) * model.outputPrice;
@@ -88,9 +101,10 @@ function PricingCalculator() {
   };
 
   // Calculate estimated price for a specific model
-  const calculateModelPrice = (model: LLMModel) => {
-    const inputTokens = convertToTokens(inputValue, selectedUnit);
-    const outputTokens = convertToTokens(outputValue, selectedUnit);
+  const calculateModelPrice = (model: LLMModel, unit: UnitType) => {
+    // Use passed unit for conversion
+    const inputTokens = convertToTokens(inputValue, unit);
+    const outputTokens = convertToTokens(outputValue, unit);
 
     const inputCost = (inputTokens / 1000000) * model.inputPrice;
     const outputCost = (outputTokens / 1000000) * model.outputPrice;
@@ -101,8 +115,9 @@ function PricingCalculator() {
   // Sort models by calculated price
   const getSortedModels = () => {
     return [...llmModels].sort((a, b) => {
-      const priceA = calculateModelPrice(a);
-      const priceB = calculateModelPrice(b);
+      // Pass selectedUnit to calculateModelPrice
+      const priceA = calculateModelPrice(a, selectedUnit);
+      const priceB = calculateModelPrice(b, selectedUnit);
       return priceA - priceB;
     });
   };
@@ -316,7 +331,7 @@ function PricingCalculator() {
                   <td>${model.inputPrice}</td>
                   <td>${model.outputPrice}</td>
                   <td className="estimated-cost">
-                    ${calculateModelPrice(model).toFixed(6)}
+                    ${calculateModelPrice(model, selectedUnit).toFixed(6)}
                   </td>
                   {/* <td className="action-cell">
                     <button className="action-button">Buy</button>
