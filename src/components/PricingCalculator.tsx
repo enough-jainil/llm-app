@@ -317,7 +317,11 @@ function PricingCalculator() {
                 margin={{ top: 20, right: 30, left: 20, bottom: 150 }}
                 layout="horizontal"
               >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  stroke="var(--glass-border)"
+                />
                 <XAxis
                   dataKey="name"
                   type="category"
@@ -326,6 +330,7 @@ function PricingCalculator() {
                   textAnchor="end"
                   height={160}
                   tick={{ fontSize: 10 }}
+                  stroke="var(--text-secondary)"
                 />
                 <YAxis
                   type="number"
@@ -334,20 +339,38 @@ function PricingCalculator() {
                   allowDataOverflow={true}
                   tickFormatter={(value) => `$${value.toFixed(6)}`}
                   width={90}
+                  stroke="var(--text-secondary)"
                 />
                 <Tooltip
                   formatter={(value, name, props) => [
                     `$${Number(value).toFixed(6)}`,
                     `${props.payload.name} (${props.payload.provider})`,
                   ]}
+                  contentStyle={{
+                    backgroundColor: "var(--bg-secondary)",
+                    border: "1px solid var(--glass-border)",
+                    color: "var(--text-primary)",
+                    borderRadius: "8px",
+                  }}
+                  labelStyle={{ color: "var(--text-primary)" }}
                 />
-                <Legend verticalAlign="top" height={36} />
+                <Legend
+                  verticalAlign="top"
+                  height={36}
+                  wrapperStyle={{ color: "var(--text-primary)" }}
+                />
                 <Bar dataKey="cost" name="Estimated Cost" barSize={40}>
                   {getCostComparisonData().map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={entry.isSelected ? "#4CAF50" : "#8884d8"}
-                      stroke={entry.isSelected ? "#4CAF50" : "#8884d8"}
+                      fill={
+                        entry.isSelected
+                          ? "var(--accent-hover)"
+                          : "var(--accent-color)"
+                      }
+                      stroke={
+                        entry.isSelected ? "#ffffff" : "var(--glass-border)"
+                      }
                     />
                   ))}
                 </Bar>
