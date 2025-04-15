@@ -1,73 +1,117 @@
 .main-content {
   padding: 2rem;
-  flex: 1;
-  background-color: #f9fafb;
+  flex-grow: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  background-color: transparent;
 }
 
 .content-wrapper {
-  max-width: 1200px;
-  margin: 0 auto;
+  animation: fadeIn 0.8s ease;
 }
 
 .title {
-  font-size: 2.25rem;
+  font-size: 2.5rem;
   font-weight: 700;
-  color: #111827;
   margin-bottom: 1rem;
+  text-align: center;
+  background: linear-gradient(to right, var(--accent-color), #a18dff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: pulse 3s ease-in-out infinite;
 }
 
 .description {
-  color: #4b5563;
-  margin-bottom: 2rem;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  color: var(--text-secondary);
+  animation: slideUp 0.6s ease;
   line-height: 1.5;
 }
 
 .tabs {
   display: flex;
-  gap: 1rem;
+  border-bottom: 1px solid var(--glass-border);
   margin-bottom: 2rem;
-  border-bottom: 1px solid #e5e7eb;
+  justify-content: center;
+  animation: fadeIn 0.8s ease;
 }
 
 .tab {
-  padding: 0.75rem 1.5rem;
+  padding: 0.7rem 1.5rem;
   cursor: pointer;
-  color: #6b7280;
+  margin-right: 0.5rem;
   border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+  border-radius: 8px 8px 0 0;
+}
+
+.tab:hover {
+  background: rgba(140, 97, 255, 0.08);
+  transform: translateY(-2px);
 }
 
 .tab.active {
-  color: #111827;
-  border-bottom-color: #3b82f6;
+  border-bottom: 2px solid var(--accent-color);
+  color: var(--accent-color);
+  font-weight: 500;
+  background: rgba(140, 97, 255, 0.08);
 }
 
 .pricing-table-container {
-  background-color: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   overflow-x: auto;
+  margin-bottom: 2rem;
+  border-radius: 12px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--card-shadow);
+  animation: slideUp 0.6s ease;
+  transition: all 0.3s ease;
+}
+
+.pricing-table-container:hover {
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+  transform: translateY(-5px);
 }
 
 .pricing-table {
   width: 100%;
   border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .pricing-table th,
 .pricing-table td {
   padding: 1rem;
   text-align: left;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .pricing-table th {
-  background-color: #f9fafb;
-  font-weight: 600;
-  color: #374151;
+  background-color: rgba(40, 40, 40, 0.7);
+  font-weight: 500;
+  color: var(--text-primary);
+  position: sticky;
+  top: 0;
+}
+
+.pricing-table tr {
+  transition: all 0.2s ease;
+}
+
+.pricing-table tr:hover {
+  background-color: rgba(140, 97, 255, 0.08);
 }
 
 .no-results {
   text-align: center;
-  color: #6b7280;
   padding: 2rem;
+  color: var(--text-secondary);
+  animation: fadeIn 0.5s ease;
 }

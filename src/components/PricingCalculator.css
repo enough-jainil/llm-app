@@ -10,35 +10,130 @@
   /* flex: 1; Removed */
   /* min-width: 500px; Removed */
   padding: 1rem;
-  background: white;
+  background: var(--glass-bg);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .pricing-calculator-container {
+  margin-bottom: 2rem;
+  animation: slideUp 0.7s ease;
+}
+
+.pricing-calculator {
   padding: 2rem;
-  max-width: 1600px;
-  margin: 0 auto;
+  border-radius: 12px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s ease;
+}
+
+.pricing-calculator:hover {
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+  transform: translateY(-5px);
+}
+
+.calculator-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  background: linear-gradient(to right, var(--accent-color), #a18dff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.calculator-form {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.model-select,
+.input-field {
+  padding: 0.75rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  background: rgba(30, 30, 30, 0.3);
+  color: var(--text-primary);
+  width: 100%;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.model-select:focus,
+.input-field:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(140, 97, 255, 0.2);
+  outline: none;
+}
+
+.price-result {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background: rgba(30, 30, 30, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  text-align: center;
+  animation: fadeIn 0.5s ease;
+}
+
+.price-result h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.price-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  margin-bottom: 0.5rem;
+}
+
+.price-placeholder {
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
 }
 
 .chart-container {
   margin: 1rem 0;
   padding: 1rem;
-  background: #f8f9fa;
+  background: var(--glass-bg);
   border-radius: 8px;
+  border: 1px solid var(--glass-border);
 }
 
 .comparison-title {
   margin: 0;
   padding-bottom: 1rem;
   font-size: 1.5rem;
-  color: #333;
+  color: var(--text-primary);
   text-align: center; /* Center title */
 }
 
 .comparison-subtitle {
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-secondary);
   margin-top: 0.5rem;
   text-align: center; /* Center subtitle */
 }
